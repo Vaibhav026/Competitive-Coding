@@ -1,0 +1,76 @@
+Algorithm
+
+We will divide each instruction into five stages as done in pipeline.
+
+1. IF(Instruction Fetch)
+2. ID(Instruction Decode) 
+3. EX(Execute)
+4. MEM(Memory)
+5  WB(Write Back)
+
+We will make generalized functions which will handle every type of instruction lets call them f1,f2,f3,f4,f5.
+f1 will handle IF for every instruction,similarly f2 will handle ID for each type of instruction and so on.
+We have improved our parsing and have made the data of each instruction available as data portion of a class.
+For eg if we want to extract instruction type we can easily extract it from {Instruction Object}.Type() function.These functions are used for making f1,f2 etc functions. Making f1,f2 etc functions is trivial as we just have to replicate the datapath of the final circuit which we made in processor chapter as given below.           	 
+
+
+
+
+Let's explain how will these functions work for instruction add.
+f1 will extract the complete instruction from the class and pass on to IF/ID register.In the next clock cycle
+f2 will start decoding the instruction and will extract register number,instruction type(these will be extracted from object of class) and also read register if required and pass onto the next pipeline register.
+f3 will add numbers if command being considered is add,f4 will store the correspoding values in memory(array here) and f5 will write back to register.The above mentioned text is very trivial and seems to be very similar to what we studied in processor chapter but differnece will be illustarated through code.
+     
+
+Now comes the part of how to organise these functions so that we can get a pipeline.For this we will take help of recursion.Let's explain this - :
+
+
+
+
+This image above illustrates how pipeline works.The functions will be of type -:
+
+i here refers to the instruction number.
+f2(i){
+	....
+	..
+
+	f1(i+1)
+}
+
+
+f3(i){
+	
+	....
+	..
+
+	f2(i+1)
+}
+
+The above function completely illustrates our algorithm for implementing pipeline(hazards not dealt yet).They illustrate that ID function for ith instruction after its compeletion will call IF for the next instruction,this will ensure that we get the work done within a clock cycle.
+
+For pipeline also we will have a class which will have pipeline registers as their data component.Also control values will also be contained in the pipeline.
+
+Now lets move to handling hazards. 
+
+Data Hazard
+We will compare registers for EX/MEM stage and ID/EX stage if we find destination register of EX/MEM stage to be used in ID/EX stage then we know its a data hazard.This can done in f3 function which simulates execute stage using an if condition for comparing two pipeline registers.Now this hazard needs to be removed.
+													This is done by extracting the needed value from the 
+EX/MEM pipeline register.This is incorporated by putting an if statement in the execute state function which checks if the given conditon holds then value is extracted from the pipeline register of the next stage .
+
+
+Load Use Hazards
+Similar to data hazard these are detected by comparing ID/EX and IF/ID pipeline registers.This is resolved by inserting a stall into the pipeline.How do we insert a stall ?
+We maintain a bool variable which be passed onto all the stages of the pipeline and that varaible if true will not allow any data to be written into the regsiters and memory.
+Alternatively we can also implement as done in arm pipeline.We will turn all control values to zero and hence nothing will be allowed to written to registers or memory.This can be done in the f2 function which then propagates to the next stages of the pipeline.
+															We also have to stop increment of pc until we have
+stalls, this can be done by decrementing pc in f2 which will again get incremented by default and hence will fetch the same instruction.
+
+
+Different number of clock cycles for some instructions -:
+This means that some stages of these instrcution will take more than one clock cycle hence we need to stall till that stage gets completed.Stalling is done as described in the load use hazard by setting control values to zero.
+
+
+Branch Hazards
+One simple way is to stall the pipeline till we are not sure where will branch move pc to.As we have implemented branch instructions based on cmp statement placed above the branch statement hence we have to stall after cmp for it to be able to compare the values till execute stage.After that we can directly direct that value(true or false) to the first stage of branch and there on branch or not.But to make pipeline more aggressive we need to use branch prediction for which we may have to flush all the stages of pipeline extracted due to taking wrong prediction.This can be done by maintaining a global variable which can be turned true when we detect that we have taken the wrong branch(This can be detected upto EX or MEM stage),hence we need to flush atmost 4 pipeline stages.After the global variable is turned true we can simply zero all the wrongly taken stages by making all signals and values in them to be zero as a result no wrong values propagate in next stages.Also we need to change pc,this can also be done by an if condition on global variable which will hence change pc.    
+
+

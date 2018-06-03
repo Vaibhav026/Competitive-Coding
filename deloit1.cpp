@@ -22,10 +22,10 @@ int main()
     {   
         cin>>a[i];
         
-        child[a[i]].push_back(i);
         
         if(a[i]!=-1)
-        {
+        {   
+            child[a[i]].push_back(i);    // pushing i (i.e) in child of a[i]
             b[a[i]] = false;                // if a[i] is parent of ith node then a[i] cannot be leaf
         }
         else
@@ -40,7 +40,30 @@ int main()
     int x;
     cin>>x;
 
-	
+    b[x] = false ;
+    int size = child[x].size();
+
+    int childx;
+
+    for(int i=0;i<size;i++)
+    {
+        childx = child[x][i] ;
+
+        b[childx] = false;
+    }    
+
+    int count = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        if(b[i] == true)
+        count++;    
+
+    } 
+
+    cout << count ;   
+       
+
 }
 
 

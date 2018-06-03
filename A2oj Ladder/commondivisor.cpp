@@ -39,33 +39,28 @@ int main()
 		string temp1,temp2;
 		if(l1 % factors[i] == 0 && l2 % factors[i] == 0)
 		{	
-			bool flag = true ;
+			
+			bool flag = true;
+			temp1 = s1.substr(0,factors[i]);
 
-			for(int j = 0;j<l1;j++)
-			{
-				if(s1[j] != s1[j%factors[i]])
-				{
-					flag = false;
-				}	
-			}	
+			
 
-			for(int j = 0;j<l2;j++)
+			for(int j = 0;j< l1;j++)
 			{
-				if(s2[j] != s2[j%factors[i]])
-				{
-					flag = false;
-				}	
+				if(temp1[j%factors[i]] != s1[j])
+				flag = false;	
 			}
 
-			for(int j=0;j<factors[i];j++)
+			for(int j = 0;j< l2;j++)
 			{
-				if(s1[j]!=s2[j])
+				if(temp1[j%factors[i]] != s2[j])
 				flag = false;	
 			}
 
 			if(flag)
-			{	ans++;
-			}	
+			ans++;	
+
+				
 		}	
 
 	}

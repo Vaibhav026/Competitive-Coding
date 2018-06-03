@@ -4,7 +4,7 @@ using namespace std;
 
 // modular exponentiation
 
-long long int power(int x, long long int y, long long int p)
+long long int power(long long int x, long long int y, long long int p)
 {
     long long int res = 1;      // Initialize result
  
