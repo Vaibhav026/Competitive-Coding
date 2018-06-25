@@ -20,6 +20,7 @@ int main()
 	ans+=a1;
 	
 	if(y>y1)	
+		
 	ans+=a2;
 	
 	if(z<0)	

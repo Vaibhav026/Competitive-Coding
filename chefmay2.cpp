@@ -11,7 +11,7 @@ int main()
 
   long int n,k;
 
-while(t--){
+    while(t--){
 
   	cin>>n>>k;
 
