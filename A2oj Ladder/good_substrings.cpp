@@ -12,7 +12,7 @@ int main()
 
 	long int l = s.length();
 
-	long int even_a,even_b,odd_b,odd_a;
+	long long int even_a,even_b,odd_b,odd_a;
 
 	even_a = 0;
 	even_b = 0;
