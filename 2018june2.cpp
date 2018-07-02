@@ -80,7 +80,7 @@ int main()
 		a[i] = i+1;
 		
 		heapPermutation(a,n,n,k);	
-		cout << sum;
+		cout << sum<<endl;
 
 	}
 

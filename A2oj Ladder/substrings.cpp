@@ -126,7 +126,7 @@ int main()
     			    // cout << s2[x];
 
 
-    			    cout  << endl;
+    			   // cout  << endl;
     			  insert(root,s2,ll);
 
 
