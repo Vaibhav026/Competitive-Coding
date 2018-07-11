@@ -96,7 +96,7 @@ int main()
 
 	int mansteps = ans[manx][many];
 		
-	cout << mansteps << endl;	
+	//cout << mansteps << endl;	
 	int temp;
 
 	int sum =0;
