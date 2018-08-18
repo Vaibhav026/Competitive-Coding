@@ -91,12 +91,12 @@ int main()
 		r = r-1;
 
 		if(val[l] == val[r])
-			cout << "YES\n";
+			cout << "Yes\n";
 		else{
 			if(edge[l] == true && (val[l] == val[r]-1))
-				cout << "YES\n";
+				cout << "Yes\n";
 			else
-				cout << "NO\n";
+				cout << "No\n";
 		}
 	}
 
