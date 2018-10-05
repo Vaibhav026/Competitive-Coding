@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 /* Template file for Online Algorithmic Competitions */
@@ -79,143 +79,92 @@ bool operator <= (const string &a, const string &b){
 }
 
 
+int isRight(int x1,int y1,int x2,int y2){
 
-// Structure of a point in 2D space
-struct Point
-{
-    ll x, y;
-};
- 
-// A utility function to find square of distance
-// from point 'p' to poitn 'q'
-ll distSq(Point p, Point q)
-{
-    return (p.x - q.x)*(p.x - q.x) +
-           (p.y - q.y)*(p.y - q.y);
+	int val = x1*y2 - y1*x2;
+
+	if(val == 0)
+		return 0;
+
+	if(val > 0)
+		return 1;
+	else
+		return -1;
+
 }
- 
-// This function returns true if (p1, p2, p3, p4) form a
-// square, otherwise false
-bool isSquare(Point p1, Point p2, Point p3, Point p4)
-{
-    ll d2 = distSq(p1, p2);  // from p1 to p2
-    ll d3 = distSq(p1, p3);  // from p1 to p3
-    ll d4 = distSq(p1, p4);  // from p1 to p4
+
+int main()
+{	
+	#ifndef ONLINE_JUDGE
+    // for getting input from input.txt
+    freopen("input.txt", "r", stdin);
+    // for writing output to output.txt
+    freopen("output.txt", "w", stdout);
+    #endif
     
-    if(d2 == 0 || d3 == 0 || d4 == 0 || distSq(p2,p3) == 0 || distSq(p2,p4) == 0 || distSq(p3,p4) == 0)
-        return false;
+	int n;
+	cin >> n;
 
-    // If lengths if (p1, p2) and (p1, p3) are same, then
-    // following conditions must met to form a square.
-    // 1) Square of length of (p1, p4) is same as twice
-    //    the square of (p1, p2)
-    // 2) p4 is at same distance from p2 and p3
-    if (d2 == d3 && 2*d2 == d4)
-    {
-        ll d = distSq(p2, p4);
-        return (d == distSq(p3, p4) && d == d2);
-    }
- 
-    // The below two cases are similar to above case
-    if (d3 == d4 && 2*d3 == d2)
-    {
-        ll d = distSq(p2, p3);
-        return (d == distSq(p2, p4) && d == d3);
-    }
-    if (d2 == d4 && 2*d2 == d3)
-    {
-        ll d = distSq(p2, p3);
-        return (d == distSq(p3, p4) && d == d2);
-    }
- 
-    return false;
-}
+	int x[n],y[n];
 
-int main(int argc, char const *argv[])
-{
-    int n;
+	long double angle[n];
 
-    cin >> n;
+	long double tmp;
 
+	rep(i,n){
+		cin >> x[i] >> y[i];
 
-    ll x[4],y[4],a[4],b[4];
+		if(x[i] == 0){
+			if(y[i] >= 0)
+				angle[i]  = 90.000000000;
+			else
+				angle[i] = 270.000000000;
+		}
+		else{
 
-    int sum = 0;
+			tmp = (long double) abs(y[i])/abs(x[i]) ;
 
-    rep(i,n){
+			if(x[i] >= 0 && y[i]>=0){
 
-        sum = 0;
+				angle[i] = (long double) (180/PI)*atan(tmp);
+			}
+			else if(x[i] <=0 && y[i] >= 0){
 
-        std::vector<ll> xpos[4];
-        std::vector<ll> ypos[4];
+				angle[i] = 180.00000000 - (long double) (180/PI)*atan(tmp);
+			}
+			else if(x[i] <= 0 && y[i] <= 0){
 
-        cin >> x[0] >> y[0] >> a[0] >> b[0];
-        cin >> x[1] >> y[1] >> a[1] >> b[1];
-        cin >> x[2] >> y[2] >> a[2] >> b[2];
-        cin >> x[3] >> y[3] >> a[3] >> b[3];
+				angle[i] = 180.00000000 + (long double) (180/PI)*atan(tmp);
+			}
+			else{
 
-        bool aa = false;
-        rep(j,4){
-            //ll r = sqrt( ((x[j]-a[j])*(x[j]-a[j]) + (y[j]-b[j])*(y[j]-b[j]) );
+				angle[i] = 360.00000000 - (long double) (180/PI)*atan(tmp);
+			}
 
-            
-            // cout << cos_theta << endl;
-            // cout << sin_theta << endl;
+		}	
+	}
 
-            xpos[j].pb(x[j]);
-            ypos[j].pb(y[j]);
+	sort(angle,angle+n);
 
-            xpos[j].pb(a[j]-(y[j]-b[j]));
-            ypos[j].pb(b[j]+(x[j]-a[j]));
+	long double min = angle[n-1] - angle[0];
 
-            xpos[j].pb(a[j]-(x[j]-a[j]));
-            ypos[j].pb(b[j]-(y[j]-b[j]));
+	rep1(i,n){
 
-            xpos[j].pb(a[j]+(y[j]-b[j]));
-            ypos[j].pb(b[j]-(x[j]-a[j]));
-        }
+		long double t = 360.0000000 - (angle[i]-angle[i-1]);
 
-        rep(j,4){
-
-            rep(k,4){
-
-                rep(l,4){
-
-                    rep(m,4){
-
-                        Point p1 = {xpos[0][j],ypos[0][j]};
-                        Point p2 = {xpos[1][k],ypos[1][k]};
-                        Point p3 = {xpos[2][l],ypos[2][l]};
-                        Point p4 = {xpos[3][m],ypos[3][m]};
-
-                        if(isSquare(p1,p2,p3,p4)){
-                            sum += j+k+l+m;
-                            aa = true;
-                            break;
-                        }
-
-                    }
-
-                    if(aa)
-                        break;
-                }
-
-                if(aa)
-                    break;
-            }
-
-            if(aa)
-                break;
-        }
+		if(t < min)
+			min = t;
+	}
+	
+	std::cout << std::fixed;
+  	std::cout << std::setprecision(9) << min << '\n';
+	
 
 
-            if(aa)
-                cout << sum << endl;
-            else
-                cout << "-1\n";
-
-    }
 
 
-    return 0;
+
+
+	return 0;
+
 }

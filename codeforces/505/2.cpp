@@ -1,6 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+long int n;
+
+long int a[150000];
+long int b[150000];
+
 /* Template file for Online Algorithmic Competitions */
 /* Typedefs */
     /* Basic types */
@@ -78,144 +83,145 @@ bool operator <= (const string &a, const string &b){
     return true;
 }
 
-
-
-// Structure of a point in 2D space
-struct Point
-{
-    ll x, y;
-};
- 
-// A utility function to find square of distance
-// from point 'p' to poitn 'q'
-ll distSq(Point p, Point q)
-{
-    return (p.x - q.x)*(p.x - q.x) +
-           (p.y - q.y)*(p.y - q.y);
-}
- 
-// This function returns true if (p1, p2, p3, p4) form a
-// square, otherwise false
-bool isSquare(Point p1, Point p2, Point p3, Point p4)
-{
-    ll d2 = distSq(p1, p2);  // from p1 to p2
-    ll d3 = distSq(p1, p3);  // from p1 to p3
-    ll d4 = distSq(p1, p4);  // from p1 to p4
-    
-    if(d2 == 0 || d3 == 0 || d4 == 0 || distSq(p2,p3) == 0 || distSq(p2,p4) == 0 || distSq(p3,p4) == 0)
-        return false;
-
-    // If lengths if (p1, p2) and (p1, p3) are same, then
-    // following conditions must met to form a square.
-    // 1) Square of length of (p1, p4) is same as twice
-    //    the square of (p1, p2)
-    // 2) p4 is at same distance from p2 and p3
-    if (d2 == d3 && 2*d2 == d4)
-    {
-        ll d = distSq(p2, p4);
-        return (d == distSq(p3, p4) && d == d2);
-    }
- 
-    // The below two cases are similar to above case
-    if (d3 == d4 && 2*d3 == d2)
-    {
-        ll d = distSq(p2, p3);
-        return (d == distSq(p2, p4) && d == d3);
-    }
-    if (d2 == d4 && 2*d2 == d3)
-    {
-        ll d = distSq(p2, p3);
-        return (d == distSq(p3, p4) && d == d2);
-    }
- 
-    return false;
-}
-
-int main(int argc, char const *argv[])
-{
-    int n;
-
-    cin >> n;
-
-
-    ll x[4],y[4],a[4],b[4];
-
-    int sum = 0;
+bool solve(long int x){
 
     rep(i,n){
 
-        sum = 0;
+        if((a[i]%x) != 0 && (b[i]%x) != 0)
+            return false;
+    }
 
-        std::vector<ll> xpos[4];
-        std::vector<ll> ypos[4];
+    return true;
 
-        cin >> x[0] >> y[0] >> a[0] >> b[0];
-        cin >> x[1] >> y[1] >> a[1] >> b[1];
-        cin >> x[2] >> y[2] >> a[2] >> b[2];
-        cin >> x[3] >> y[3] >> a[3] >> b[3];
+}
 
-        bool aa = false;
-        rep(j,4){
-            //ll r = sqrt( ((x[j]-a[j])*(x[j]-a[j]) + (y[j]-b[j])*(y[j]-b[j]) );
+std::vector<long int> first;
+std::vector<long int> second;
 
+void primeFactors(long int n)
+{
+    // Print the number of 2s that divide n
+    
+    if(n%2  == 0){
+        first.pb(2);
+    }
+    while (n%2 == 0)
+    {
+        
+        n = n/2;
+    }
+    
+    long int sq = sqrt(n);
+    // n must be odd at this point.  So we can skip 
+    // one element (Note i = i +2)
+    for (long int i = 3; i <= sq; i = i+2)
+    {
+        // While i divides n, print i and divide n
+        while (n%i == 0)
+        {
+            first.pb(i);
+            n = n/i;
+        }
+    }
+ 
+    // This condition is to handle the case when n 
+    // is a prime number greater than 2
+    if (n > 2)
+        first.pb(n);
+}
+
+void primeFactors_b(long int n)
+{
+    // Print the number of 2s that divide n
+    
+    if(n%2  == 0){
+        second.pb(2);
+    }
+    while (n%2 == 0)
+    {
+        
+        n = n/2;
+    }
+    
+    long int sq = sqrt(n);
+    // n must be odd at this point.  So we can skip 
+    // one element (Note i = i +2)
+    for (long int i = 3; i <= sq; i = i+2)
+    {
+        // While i divides n, print i and divide n
+        while (n%i == 0)
+        {
+            second.pb(i);
+            n = n/i;
+        }
+    }
+ 
+    // This condition is to handle the case when n 
+    // is a prime number greater than 2
+    if (n > 2)
+        second.pb(n);
+}
+
+int main()
+{   
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> n;
+
+    rep(i,n){
+        cin >> a[i] >> b[i];
+    }
+
+    primeFactors(a[0]);
+
+    primeFactors_b(b[0]);
+
+
+    long int s1 = first.size();
+    long int s2 = second.size();
+
+    bool res;
+
+    for(long int i=0;i<s1;i++){
+
+        res = true;
+
+        for(long int j=0;j<n;j++){
             
-            // cout << cos_theta << endl;
-            // cout << sin_theta << endl;
-
-            xpos[j].pb(x[j]);
-            ypos[j].pb(y[j]);
-
-            xpos[j].pb(a[j]-(y[j]-b[j]));
-            ypos[j].pb(b[j]+(x[j]-a[j]));
-
-            xpos[j].pb(a[j]-(x[j]-a[j]));
-            ypos[j].pb(b[j]-(y[j]-b[j]));
-
-            xpos[j].pb(a[j]+(y[j]-b[j]));
-            ypos[j].pb(b[j]-(x[j]-a[j]));
+            if(a[j]%first[i] != 0 && b[j]%first[i] != 0 ){
+                
+                res = false;
+                break;    
+            }    
         }
 
-        rep(j,4){
-
-            rep(k,4){
-
-                rep(l,4){
-
-                    rep(m,4){
-
-                        Point p1 = {xpos[0][j],ypos[0][j]};
-                        Point p2 = {xpos[1][k],ypos[1][k]};
-                        Point p3 = {xpos[2][l],ypos[2][l]};
-                        Point p4 = {xpos[3][m],ypos[3][m]};
-
-                        if(isSquare(p1,p2,p3,p4)){
-                            sum += j+k+l+m;
-                            aa = true;
-                            break;
-                        }
-
-                    }
-
-                    if(aa)
-                        break;
-                }
-
-                if(aa)
-                    break;
-            }
-
-            if(aa)
-                break;
+        if(res){
+            cout << first[i];
+            return 0;
         }
-
-
-            if(aa)
-                cout << sum << endl;
-            else
-                cout << "-1\n";
-
     }
 
 
+    for(long int i=0;i<s2;i++){
+
+        res = true;
+
+        for(long int j=0;j<n;j++){
+            
+            if(a[j]%second[i] != 0 && b[j]%second[i] != 0 ){
+                
+                res = false;
+                break;    
+            }    
+        }
+
+        if(res){
+            cout << second[i];
+            return 0;
+        }
+    }
+
+    cout << "-1";
     return 0;
 }
