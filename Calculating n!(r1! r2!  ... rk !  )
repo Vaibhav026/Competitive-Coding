@@ -1,0 +1,5 @@
+(where r1 + r2 ... rk  = n)
+n!/(r1! * r2 !  ..  rk!) =
+
+r1Cr1 * (r1+r2)Cr2 * (r1+r2+r3)Cr3  ....                (r1+r2+r3 ..  rk)Crk =   (r1+r2+r3 ..  rk) ! / (r1!) * (r2 !) ...    (rk!)          
+
